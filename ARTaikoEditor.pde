@@ -9,8 +9,8 @@ Score score;
 
 void setup() {
   size(800, 600);
-  unitX = width/40;
-  unitY = height/40;
+  unitX = width / 40;
+  unitY = height / 40;
 
   setLayout(null);
   
