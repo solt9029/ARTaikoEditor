@@ -1,6 +1,7 @@
 # Usage
 
 ```
+cd data
 cp score_example.tja score.tja
 ```
 
