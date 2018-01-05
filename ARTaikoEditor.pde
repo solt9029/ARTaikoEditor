@@ -77,7 +77,7 @@ void mousePressed() {
 }
 
 void keyPressed() {
-  if (keyCode == UP)score.scrollY(1);
-  if (keyCode == DOWN)score.scrollY(-1);
-  if (keyCode == ENTER)score.turnEditing();
+  if (keyCode == UP) score.scrollY(1);
+  if (keyCode == DOWN) score.scrollY(-1);
+  if (keyCode == ENTER) score.turnEditing();
 }
