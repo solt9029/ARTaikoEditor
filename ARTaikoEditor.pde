@@ -1,16 +1,22 @@
-import processing.serial.*;
 import java.awt.*;
 import java.util.*;
+import processing.video.*;
+import jp.nyatla.nyar4psg.*;
+
 HashMap <String, TextField> fields = new HashMap<String, TextField>();
 int unitX;
 int unitY;
 int scrollY = 0;
 Score score;
+Capture cam; // 動画
+MultiMarker nya;
+boolean isAr = true;
+int VIDEO_H = 100;
 
 void setup() {
-  size(800, 600);
+  size(800, 700);
   unitX = width / 40;
-  unitY = height / 40;
+  unitY = (height - VIDEO_H) / 40;
 
   setLayout(null);
   
@@ -28,6 +34,19 @@ void setup() {
     fields.get(field.getKey()).setFont(new Font("Century", Font.PLAIN, 24));
     add(fields.get(field.getKey()));
   }
+  
+  cam = new Capture(this, width, width*3/4);
+  cam.start();
+  
+  nya = new MultiMarker(this, width, width*3/4, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
+  nya.addNyIdMarker(0,20);
+  nya.addNyIdMarker(1,20);
+  nya.addNyIdMarker(2,20);
+  nya.addNyIdMarker(3,20);
+  nya.addNyIdMarker(4,20);
+  nya.addNyIdMarker(5,20);
+  nya.addNyIdMarker(6,20);
+  nya.addNyIdMarker(7,20);
 } 
 
 void draw() {
@@ -68,6 +87,8 @@ void draw() {
     noStroke();
   }
   rect(unitX*0, unitY*38, unitX*40, unitY*2);
+  
+  image(cam, 0, height - VIDEO_H); // カメラの様子を画面下に描いている
 }
 
 void mousePressed() {
@@ -80,4 +101,10 @@ void keyPressed() {
   if (keyCode == UP) score.scrollY(1);
   if (keyCode == DOWN) score.scrollY(-1);
   if (keyCode == ENTER) score.turnEditing();
+}
+
+//カメラの映像が更新されるたびに、最新の映像を読み込む
+void captureEvent(Capture camera) {
+  camera.read();
+  nya.detect(cam);
 }
