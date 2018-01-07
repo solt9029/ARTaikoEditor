@@ -88,7 +88,9 @@ void draw() {
   }
   rect(unitX*0, unitY*38, unitX*40, unitY*2);
   
-  image(cam, 0, height - VIDEO_H); // カメラの様子を画面下に描いている
+  // カメラでうつしている画像の細長い真ん中を表示する
+  PImage tmp = cam.get(0, 250, width, 100);
+  image(tmp, 0, height - VIDEO_H); // カメラの様子を画面下に描いている
 }
 
 void mousePressed() {
