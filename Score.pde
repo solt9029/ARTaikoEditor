@@ -81,24 +81,6 @@ class Score {
     saveStrings(this.fileName, this.file);
   }
 
-  void updateTitle() {
-    this.file[this.titlePos] = "TITLE:" + fields.get("title").getText();
-    this.title = fields.get("title").getText();
-    saveStrings(this.fileName, this.file);
-  }
-
-  void updateBpm() {
-    this.file[this.bpmPos] = "BPM:"+fields.get("bpm").getText();
-    this.bpm = fields.get("bpm").getText();
-    saveStrings(this.fileName, this.file);
-  }
-
-  void updateOffset() {
-    this.file[this.offsetPos] = "OFFSET:"+fields.get("offset").getText();
-    this.offset = fields.get("offset").getText();
-    saveStrings(this.fileName, this.file);
-  }
-
   void display() {
     this.displayLines();
     this.displayNotes();
