@@ -89,7 +89,7 @@ void draw() {
   rect(unitX*0, unitY*38, unitX*40, unitY*2);
   
   // カメラでうつしている画像の細長い真ん中を表示する
-  PImage tmp = cam.get(0, 250, width, 100);
+  PImage tmp = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
   image(tmp, 0, height - VIDEO_H); // カメラの様子を画面下に描いている
 }
 
@@ -109,4 +109,12 @@ void keyPressed() {
 void captureEvent(Capture camera) {
   camera.read();
   nya.detect(cam);
+  println("0"+nya.isExistMarker(0));
+  println("1"+nya.isExistMarker(1));
+  println("2"+nya.isExistMarker(2));
+  println("3"+nya.isExistMarker(3));
+  println("4"+nya.isExistMarker(4));
+  println("5"+nya.isExistMarker(5));
+  println("6"+nya.isExistMarker(6));
+  println("7"+nya.isExistMarker(7));
 }
