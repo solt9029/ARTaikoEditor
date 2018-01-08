@@ -282,6 +282,9 @@ class Score {
     if (!this.editing) {
       return;
     }
+    if (isAr) {
+      return;
+    }
     //out of bounds return
     if (!(x>unitX*(4+(this.editingPart%2)*16)) || !(y>unitY*(8.25+5*int(this.editingPart/2)+this.scrollY)) || !(x<unitX*(20+(this.editingPart%2)*16)) || !(y<unitY*(11.75+5*int(this.editingPart/2)+this.scrollY))) {
       return;
@@ -291,5 +294,15 @@ class Score {
         this.editingNotes[i] = (this.editingNotes[i] + 1) % 3;
       }
     }
+  }
+  
+  void edit(int [] markers) {
+    if (!this.editing) {
+      return;
+    }
+    if (!isAr) {
+      return;
+    }
+    this.editingNotes = markers;
   }
 }
