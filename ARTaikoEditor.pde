@@ -4,21 +4,36 @@ import processing.video.*;
 import jp.nyatla.nyar4psg.*;
 
 HashMap <String, TextField> fields = new HashMap<String, TextField>();
+
+// 単位
 int unitX;
 int unitY;
+
 int scrollY = 0;
 Score score;
 Capture cam; // 動画
 MultiMarker nya;
 boolean isAr = false;
+
+// カメラの大きさ（最終的にVIDEO_WとVIDEO_Hに広がる）
+int CAMERA_W = 640;
+int CAMERA_H = 480;
+
 int VIDEO_H;
 int VIDEO_W;
+
+// 認識部分の高さと幅
+int REC_W;
+int REC_H;
 
 void setup() {
   size(800, 1200, P3D);
   
   VIDEO_W = width;
   VIDEO_H = VIDEO_W * 3 / 4;
+  
+  REC_W = VIDEO_W - 10 * 2;
+  REC_H = VIDEO_H - 100 * 2;
   
   unitX = width / 40;
   unitY = (height - VIDEO_H) / 40;
@@ -100,9 +115,17 @@ void draw() {
   }
   rect(unitX*0, unitY*38, unitX*40, unitY*2);
   
-  // カメラでうつしている画像の細長い真ん中を表示する
-  // PImage tmpImg = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
-  image(cam, 0, height - VIDEO_H, VIDEO_W, VIDEO_H); // カメラの様子を画面下に描いている
+  image(cam, 0, height-VIDEO_H, VIDEO_W, VIDEO_H); // カメラの様子を画面下に描いている
+  
+  // 認識部分
+  stroke(0, 255, 65);
+  strokeWeight(10);
+  noFill();
+  for (int y = 0; y < 2; y++) {
+    for (int x = 0; x < 4; x++) {
+      rect((width-REC_W)/2+REC_W/4*x, height-VIDEO_H+(VIDEO_H-REC_H)/2+REC_H/2*y, REC_W/4, REC_H/2);
+    }
+  }
 }
 
 void mousePressed() {
@@ -121,6 +144,8 @@ void keyPressed() {
 void captureEvent(Capture camera) {
   camera.read();
   nya.detect(cam);
+  
+//  PImage tmpImg = cam.get(
   
 //  PImage tmpImg = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
 //  
