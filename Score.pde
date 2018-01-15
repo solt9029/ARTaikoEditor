@@ -82,10 +82,15 @@ class Score {
   }
 
   void display() {
+    pushMatrix();
+    translate(0, 0, -10);
+    
     this.displayLines();
     this.displayNotes();
     this.displayEditingNotes();
     this.displayEditingPart();
+    
+    popMatrix();
   }
 
   void displayLines() {

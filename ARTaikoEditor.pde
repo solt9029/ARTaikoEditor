@@ -11,10 +11,15 @@ Score score;
 Capture cam; // 動画
 MultiMarker nya;
 boolean isAr = false;
-int VIDEO_H = 100;
+int VIDEO_H;
+int VIDEO_W;
 
 void setup() {
-  size(800, 700);
+  size(800, 1200, P3D);
+  
+  VIDEO_W = width;
+  VIDEO_H = VIDEO_W * 3 / 4;
+  
   unitX = width / 40;
   unitY = (height - VIDEO_H) / 40;
 
@@ -37,7 +42,7 @@ void setup() {
   
   // ここにtrycatchでisArの判定を書く
   try {
-    cam = new Capture(this, width, width*3/4);
+    cam = new Capture(this, 640, 480);
     cam.start();
     isAr = true;
   } catch (Exception e) {
@@ -45,7 +50,7 @@ void setup() {
   }
   
   // IDマーカーを登録する
-  nya = new MultiMarker(this, width, width*3/4, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
+  nya = new MultiMarker(this, 640, 480, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
   nya.addNyIdMarker(0,20);
   nya.addNyIdMarker(1,20);
   nya.addNyIdMarker(2,20);
@@ -96,8 +101,8 @@ void draw() {
   rect(unitX*0, unitY*38, unitX*40, unitY*2);
   
   // カメラでうつしている画像の細長い真ん中を表示する
-  PImage tmpImg = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
-  image(tmpImg, 0, height - VIDEO_H); // カメラの様子を画面下に描いている
+  // PImage tmpImg = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
+  image(cam, 0, height - VIDEO_H, VIDEO_W, VIDEO_H); // カメラの様子を画面下に描いている
 }
 
 void mousePressed() {
@@ -117,37 +122,37 @@ void captureEvent(Capture camera) {
   camera.read();
   nya.detect(cam);
   
-  PImage tmpImg = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
-  
-  int [] markers = new int [score.EDIT_NOTE_NUM];
-  
-  for (int i = 0; i < score.EDIT_NOTE_NUM; i++) {
-    // その番号のマーカーを認識していたらその部分は空白
-    if (nya.isExistMarker(i)) {
-      markers[i] = 0;
-      continue;
-    }
-    
-    markers[i] = 1; // IDマーカーが無かったらとりあえずどんにしておく
-    
-    //もし青色なら「かっ」にするよ
-    int redValue = 0;
-    int greenValue = 0;
-    int blueValue = 0;
-    for (int y = 0; y < VIDEO_H; y++) {
-      for (int x = i*width/score.EDIT_NOTE_NUM; x < (i+1)*width/score.EDIT_NOTE_NUM; x++) {
-        redValue += red(tmpImg.pixels[x + y * width]);
-        greenValue += green(tmpImg.pixels[x + y * width]);
-        blueValue += blue(tmpImg.pixels[x + y * width]);
-      }
-    }
-    redValue = redValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
-    greenValue = greenValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
-    blueValue = blueValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
-    if (blueValue > redValue + 10) { // この値はキャリブレーションする
-      markers[i] = 2;
-    }
-  }
-  
-  score.edit(markers);
+//  PImage tmpImg = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
+//  
+//  int [] markers = new int [score.EDIT_NOTE_NUM];
+//  
+//  for (int i = 0; i < score.EDIT_NOTE_NUM; i++) {
+//    // その番号のマーカーを認識していたらその部分は空白
+//    if (nya.isExistMarker(i)) {
+//      markers[i] = 0;
+//      continue;
+//    }
+//    
+//    markers[i] = 1; // IDマーカーが無かったらとりあえずどんにしておく
+//    
+//    //もし青色なら「かっ」にするよ
+//    int redValue = 0;
+//    int greenValue = 0;
+//    int blueValue = 0;
+//    for (int y = 0; y < VIDEO_H; y++) {
+//      for (int x = i*width/score.EDIT_NOTE_NUM; x < (i+1)*width/score.EDIT_NOTE_NUM; x++) {
+//        redValue += red(tmpImg.pixels[x + y * width]);
+//        greenValue += green(tmpImg.pixels[x + y * width]);
+//        blueValue += blue(tmpImg.pixels[x + y * width]);
+//      }
+//    }
+//    redValue = redValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
+//    greenValue = greenValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
+//    blueValue = blueValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
+//    if (blueValue > redValue + 10) { // この値はキャリブレーションする
+//      markers[i] = 2;
+//    }
+//  }
+//  
+//  score.edit(markers);
 }
