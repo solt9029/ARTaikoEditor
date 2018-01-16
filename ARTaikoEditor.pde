@@ -66,14 +66,10 @@ void setup() {
   
   // IDマーカーを登録する
   nya = new MultiMarker(this, 640, 480, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
-  nya.addNyIdMarker(0,20);
-  nya.addNyIdMarker(1,20);
-  nya.addNyIdMarker(2,20);
-  nya.addNyIdMarker(3,20);
-  nya.addNyIdMarker(4,20);
-  nya.addNyIdMarker(5,20);
-  nya.addNyIdMarker(6,20);
-  nya.addNyIdMarker(7,20);
+  // 8個は空白・8個はどん・8個はかっ
+  for (int i = 0; i < 24; i++) {
+    nya.addNyIdMarker(i,20);
+  }
 } 
 
 void draw() {
@@ -154,7 +150,6 @@ void captureEvent(Capture camera) {
     }
     
     markers[i] = 1;
-  
 
     // 出来ればパラメータで書きたいねここら辺
     PImage recImg = cam.get(8, 80, 624, 320);

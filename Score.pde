@@ -19,7 +19,11 @@ class Score {
   int [] editingNotes = new int [this.EDIT_NOTE_NUM];
 
   Score(String fileName) {
-    this.init(fileName);
+    try {
+      this.init(fileName);
+    } catch(Exception e) {
+      println(e);
+    }
   }
 
   void init(String fileName) {
