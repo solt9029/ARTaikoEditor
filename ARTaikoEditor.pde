@@ -145,39 +145,38 @@ void captureEvent(Capture camera) {
   camera.read();
   nya.detect(cam);
   
-//  PImage tmpImg = cam.get(
+  int [] markers = new int [score.EDIT_NOTE_NUM];
   
-//  PImage tmpImg = cam.get(0, (height-VIDEO_H)/2, width, VIDEO_H);
-//  
-//  int [] markers = new int [score.EDIT_NOTE_NUM];
-//  
-//  for (int i = 0; i < score.EDIT_NOTE_NUM; i++) {
-//    // その番号のマーカーを認識していたらその部分は空白
-//    if (nya.isExistMarker(i)) {
-//      markers[i] = 0;
-//      continue;
-//    }
-//    
-//    markers[i] = 1; // IDマーカーが無かったらとりあえずどんにしておく
-//    
-//    //もし青色なら「かっ」にするよ
-//    int redValue = 0;
-//    int greenValue = 0;
-//    int blueValue = 0;
-//    for (int y = 0; y < VIDEO_H; y++) {
-//      for (int x = i*width/score.EDIT_NOTE_NUM; x < (i+1)*width/score.EDIT_NOTE_NUM; x++) {
-//        redValue += red(tmpImg.pixels[x + y * width]);
-//        greenValue += green(tmpImg.pixels[x + y * width]);
-//        blueValue += blue(tmpImg.pixels[x + y * width]);
-//      }
-//    }
-//    redValue = redValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
-//    greenValue = greenValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
-//    blueValue = blueValue / (VIDEO_H * width / score.EDIT_NOTE_NUM);
-//    if (blueValue > redValue + 10) { // この値はキャリブレーションする
-//      markers[i] = 2;
-//    }
-//  }
-//  
-//  score.edit(markers);
+  for (int i = 0; i < score.EDIT_NOTE_NUM; i++) {
+    if (nya.isExistMarker(i)) {
+      markers[i] = 0;
+      continue;
+    }
+    
+    markers[i] = 1;
+  
+
+    // 出来ればパラメータで書きたいねここら辺
+    PImage recImg = cam.get(8, 80, 624, 320);
+    
+    int redValue = 0;
+    int greenValue = 0;
+    int blueValue = 0;
+    
+    for (int y = 160*(i/4); y < 160*((i/4)+1); y++) {
+      for (int x = 156*(i%4); x < 156*((i%4)+1); x++) {
+        redValue += red(recImg.pixels[x + y * 624]);
+        greenValue += green(recImg.pixels[x + y * 624]);
+        blueValue += blue(recImg.pixels[x + y * 624]);
+      } 
+    }
+    redValue = redValue / (160 * 156);
+    greenValue = greenValue / (160 * 156);
+    blueValue = blueValue / (160 * 156);
+    if (blueValue > redValue + 10) {
+      markers[i] = 2;
+    }
+  }
+  
+  score.edit(markers);
 }

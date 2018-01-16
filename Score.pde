@@ -25,7 +25,7 @@ class Score {
   void init(String fileName) {
     this.fileName = fileName;
     this.file = loadStrings(this.fileName);
-    
+
     for (int i = 0; i < this.file.length; i++) {
       if (this.file[i].indexOf("TITLE:") >= 0) {
         this.titlePos = i;
@@ -46,7 +46,7 @@ class Score {
         this.endPos = i;
       }
     }
-    
+
     this.lines = new String [this.endPos - this.startPos - 1];
     for (int i = 0; i < this.lines.length; i++) {
       this.lines[i] = this.file[i + this.startPos + 1];
@@ -58,20 +58,20 @@ class Score {
       }
     }
   }
-  
-  String getTitle(){
+
+  String getTitle() {
     return this.title;
   }
-  
-  String getBpm(){
+
+  String getBpm() {
     return this.bpm;
   }
-  
-  String getOffset(){
+
+  String getOffset() {
     return this.offset;
   }
-  
-  void updateHead(){
+
+  void updateHead() {
     this.file[this.titlePos] = "TITLE:" + fields.get("title").getText();
     this.title = fields.get("title").getText();
     this.file[this.bpmPos] = "BPM:" + fields.get("bpm").getText();
@@ -84,12 +84,12 @@ class Score {
   void display() {
     pushMatrix();
     translate(0, 0, -10);
-    
+
     this.displayLines();
     this.displayNotes();
     this.displayEditingNotes();
     this.displayEditingPart();
-    
+
     popMatrix();
   }
 
@@ -251,7 +251,7 @@ class Score {
           }
         }
         String [] newFile = new String [this.file.length + 1];
-        for (int i = 0; i < this.file.length; i++){
+        for (int i = 0; i < this.file.length; i++) {
           newFile[i] = this.file[i];
         }
         for (int i = 0; i < newLines.length; i++) {
@@ -300,7 +300,7 @@ class Score {
       }
     }
   }
-  
+
   void edit(int [] markers) {
     if (!this.editing) {
       return;
@@ -311,3 +311,4 @@ class Score {
     this.editingNotes = markers;
   }
 }
+
