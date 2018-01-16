@@ -77,7 +77,7 @@ void setup() {
 } 
 
 void draw() {
-  score.updateHead();
+  // score.updateHead();
   background(255);
 
   score.display();
@@ -131,7 +131,7 @@ void draw() {
 void mousePressed() {
   score.checkEditingPart(mouseX, mouseY);
   score.edit(mouseX, mouseY);
-  score.updateHead();
+  // score.updateHead();
 }
 
 void keyPressed() {
