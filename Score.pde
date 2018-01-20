@@ -87,7 +87,7 @@ class Score {
 
   void display() {
     pushMatrix();
-    translate(0, 0, -10);
+    translate(0, 0, -2);
 
     this.displayLines();
     this.displayNotes();

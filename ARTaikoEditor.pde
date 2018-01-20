@@ -120,8 +120,6 @@ void draw() {
   }
   rect(unitX*0, unitY*38, unitX*40, unitY*2);
   
-  image(cam, 0, height-VIDEO_H, VIDEO_W, VIDEO_H); // カメラの様子を画面下に描いている
-  
   // 認識部分
   stroke(0, 255, 65);
   strokeWeight(10);
@@ -137,6 +135,8 @@ void draw() {
 //     return; 
 //  }
   cam.read();
+
+  image(cam, 0, height-VIDEO_H, VIDEO_W, VIDEO_H); // カメラの様子を画面下に描いている
   
   int [] markers = new int [score.EDIT_NOTE_NUM];
   
@@ -153,6 +153,13 @@ void draw() {
     }
   }
   
+//  if (nyas[0].isExistMarker(0)) {
+//    nyas[0].beginTransform(0);
+//    scale(0.03);
+//    modelDonChan();
+//    nyas[0].endTransform();
+//  }
+  
   score.edit(markers);
 }
 
@@ -166,4 +173,151 @@ void keyPressed() {
   if (keyCode == UP) score.scrollY(1);
   if (keyCode == DOWN) score.scrollY(-1);
   if (keyCode == ENTER) score.turnEditing();
+}
+
+void pillar(float length, float radius1, float radius2) {
+  float x, y, z; //座標
+  pushMatrix();
+
+  //上面の作成
+  beginShape(TRIANGLE_FAN);
+  y = -length / 2;
+  vertex(0, y, 0);
+  for (int deg = 0; deg <= 360; deg = deg + 10) {
+    x = cos(radians(deg)) * radius1;
+    z = sin(radians(deg)) * radius1;
+    vertex(x, y, z);
+  }
+  endShape();
+
+  //底面の作成
+  beginShape(TRIANGLE_FAN);
+  y = length / 2;
+  vertex(0, y, 0);
+  for (int deg = 0; deg <= 360; deg = deg + 10) {
+    x = cos(radians(deg)) * radius2;
+    z = sin(radians(deg)) * radius2;
+    vertex(x, y, z);
+  }
+  endShape();
+
+  //側面の作成
+  beginShape(TRIANGLE_STRIP);
+  for (int deg =0; deg <= 360; deg = deg + 5) {
+    x = cos(radians(deg)) * radius1;
+    y = -length / 2;
+    z = sin(radians(deg)) * radius1;
+    vertex(x, y, z);
+
+    x = cos(radians(deg)) * radius2;
+    y = length / 2;
+    z = sin(radians(deg)) * radius2;
+    vertex(x, y, z);
+  }
+  endShape();
+
+  popMatrix();
+}
+
+void modelTaiko(String taiko) {
+  noStroke();
+  
+  color bodyColor = color(0, 0, 0);
+  color faceColor = color(0, 0, 0);
+  
+  if (taiko.equals("don")) {
+    bodyColor = color(93, 192, 189);
+    faceColor = color(244, 58, 0);
+  } else if (taiko.equals("ka")) {
+    bodyColor = color(244, 58, 0);
+    faceColor = color(93, 192, 189);
+  }
+  
+  // 胴体
+  fill(255);
+  pillar(300, 100, 100);
+  fill(bodyColor);
+  pillar(260, 101, 101);
+  
+  // 顔の赤色
+  pushMatrix();
+    translate(0, 151, 0);
+    rotateX(radians(90));
+    fill(faceColor);
+    ellipse(0, 0, 160, 160);
+  popMatrix();
+  
+  // 目
+  pushMatrix();
+    translate(20, 152, 43);
+    rotateX(radians(90));
+    fill(0);
+    ellipse(0, 0, 40, 40);
+  popMatrix();
+  
+  // 目
+  pushMatrix();
+    translate(20, 152, -43);
+    rotateX(radians(90));
+    fill(0);
+    ellipse(0, 0, 40, 40);
+  popMatrix();
+  
+  // 腕
+  pushMatrix();
+    rotateZ(radians(90));
+    rotateY(radians(90));
+    
+    pushMatrix();
+      translate(80, 125, 100);
+      rotateZ(radians(-30));
+      fill(255);
+      pillar(100, 5, 20);
+      translate(0, 50, 0);
+      sphere(35);
+    popMatrix();
+    
+    pushMatrix();
+      translate(-80, 125, 100);
+      rotateZ(radians(30));
+      fill(255);
+      pillar(100, 5, 20);
+      translate(0, 50, 0);
+      sphere(35);
+    popMatrix();
+    
+    pushMatrix();
+      translate(80, 125, -100);
+      rotateZ(radians(-30));
+      fill(255);
+      pillar(100, 5, 20);
+      translate(0, 50, 0);
+      sphere(35);
+    popMatrix();
+    
+    pushMatrix();
+      translate(-80, 125, -100);
+      rotateZ(radians(30));
+      fill(255);
+      pillar(100, 5, 20);
+      translate(0, 50, 0);
+      sphere(35);
+    popMatrix();
+  popMatrix();
+  
+  // お尻側の赤色
+  pushMatrix();
+    translate(0, -151, 0);
+    rotateX(radians(90));
+    fill(faceColor);
+    ellipse(0, 0, 160, 160);
+  popMatrix();
+}
+
+void modelDonChan() {
+  modelTaiko("don");
+}
+
+void modelKaChan() {
+  modelTaiko("ka");
 }
