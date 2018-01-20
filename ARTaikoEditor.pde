@@ -155,7 +155,10 @@ void draw() {
   
 //  if (nyas[0].isExistMarker(0)) {
 //    nyas[0].beginTransform(0);
-//    scale(0.03);
+//    rotateY(radians(-90));
+//    rotateX(radians(180));
+//    rotateZ(radians(-90));
+//    scale(0.1);
 //    modelDonChan();
 //    nyas[0].endTransform();
 //  }
@@ -234,7 +237,7 @@ void modelTaiko(String taiko) {
   }
   
   // 胴体
-  fill(255);
+  fill(255, 255, 255);
   pillar(300, 100, 100);
   fill(bodyColor);
   pillar(260, 101, 101);
@@ -271,7 +274,7 @@ void modelTaiko(String taiko) {
     pushMatrix();
       translate(80, 125, 100);
       rotateZ(radians(-30));
-      fill(255);
+      fill(255, 255, 255);
       pillar(100, 5, 20);
       translate(0, 50, 0);
       sphere(35);
@@ -280,7 +283,7 @@ void modelTaiko(String taiko) {
     pushMatrix();
       translate(-80, 125, 100);
       rotateZ(radians(30));
-      fill(255);
+      fill(255, 255, 255);
       pillar(100, 5, 20);
       translate(0, 50, 0);
       sphere(35);
@@ -289,7 +292,7 @@ void modelTaiko(String taiko) {
     pushMatrix();
       translate(80, 125, -100);
       rotateZ(radians(-30));
-      fill(255);
+      fill(255, 255, 255);
       pillar(100, 5, 20);
       translate(0, 50, 0);
       sphere(35);
@@ -298,7 +301,7 @@ void modelTaiko(String taiko) {
     pushMatrix();
       translate(-80, 125, -100);
       rotateZ(radians(30));
-      fill(255);
+      fill(255, 255, 255);
       pillar(100, 5, 20);
       translate(0, 50, 0);
       sphere(35);
