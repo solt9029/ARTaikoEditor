@@ -75,7 +75,7 @@ void setup() {
   nyas = new MultiMarker [score.EDIT_NOTE_NUM];
   for (int i = 0; i < nyas.length; i++) {
     nyas[i] = new MultiMarker(this, 156, 160, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
-    for (int n = 0; n < 3; n++) {
+    for (int n = 0; n < 24; n++) {
       nyas[i].addNyIdMarker(n, 27);
     }
   }
@@ -145,11 +145,11 @@ void draw() {
     nyas[i].detect(detectImg);
     
     // 0~7までのIDマーカーがその場所で見つかったら、空白とする
-    for (int n = 0; n < 3; n++) {
+    for (int n = 0; n < 24; n++) {
       if (!nyas[i].isExistMarker(n)) {
         continue;
       }
-      markers[i] = n;
+      markers[i] = n / 8;
     }
   }
   
