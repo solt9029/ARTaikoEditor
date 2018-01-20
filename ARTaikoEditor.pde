@@ -22,9 +22,13 @@ int CAMERA_H = 480;
 int VIDEO_H;
 int VIDEO_W;
 
-// 認識部分の高さと幅
+// ビデオで見たときの認識部分の高さと幅
 int REC_W;
 int REC_H;
+
+// マーカー1つ辺りの画面上の面積
+int MARKER_W;
+int MARKER_H;
 
 void setup() {
   size(800, 1200, P3D);
@@ -57,7 +61,7 @@ void setup() {
   
   // ここにtrycatchでisArの判定を書く
   try {
-    cam = new Capture(this, 640, 480);
+    cam = new Capture(this, CAMERA_W, CAMERA_H);
     cam.start();
     isAr = true;
   } catch (Exception e) {
@@ -65,7 +69,7 @@ void setup() {
   }
   
   // IDマーカーを登録する
-  nya = new MultiMarker(this, 640, 480, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
+  nya = new MultiMarker(this, 156, 160, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
   // 8個は空白・8個はどん・8個はかっ
   for (int i = 0; i < 24; i++) {
     nya.addNyIdMarker(i, 27);
@@ -128,7 +132,9 @@ void draw() {
   }
   
   cam.read();
-  nya.detect(cam);
+  PImage img = cam.get(8, 80, 156, 160);
+  nya.detect(img);
+  println(cam);
   
   int [] markers = new int [score.EDIT_NOTE_NUM];
   
@@ -140,35 +146,35 @@ void draw() {
     
     markers[i] = 1;
 
-    // 出来ればパラメータで書きたいねここら辺
-    PImage recImg = cam.get(8, 80, 624, 320);
-    
-    int redValue = 0;
-    int greenValue = 0;
-    int blueValue = 0;
-    
-    for (int y = 160*(i/4); y < 160*((i/4)+1); y++) {
-      for (int x = 156*(i%4); x < 156*((i%4)+1); x++) {
-        redValue += red(recImg.pixels[x + y * 624]);
-        greenValue += green(recImg.pixels[x + y * 624]);
-        blueValue += blue(recImg.pixels[x + y * 624]);
-      } 
-    }
-    redValue = redValue / (160 * 156);
-    greenValue = greenValue / (160 * 156);
-    blueValue = blueValue / (160 * 156);
-    if (blueValue > redValue + 5) {
-      markers[i] = 2;
-    }
+//    // 出来ればパラメータで書きたいねここら辺
+//    PImage recImg = cam.get(8, 80, 624, 320);
+//    
+//    int redValue = 0;
+//    int greenValue = 0;
+//    int blueValue = 0;
+//    
+//    for (int y = 160*(i/4); y < 160*((i/4)+1); y++) {
+//      for (int x = 156*(i%4); x < 156*((i%4)+1); x++) {
+//        redValue += red(recImg.pixels[x + y * 624]);
+//        greenValue += green(recImg.pixels[x + y * 624]);
+//        blueValue += blue(recImg.pixels[x + y * 624]);
+//      } 
+//    }
+//    redValue = redValue / (160 * 156);
+//    greenValue = greenValue / (160 * 156);
+//    blueValue = blueValue / (160 * 156);
+//    if (blueValue > redValue + 5) {
+//      markers[i] = 2;
+//    }
   }
   
   score.edit(markers);
   
-  if (nya.isExistMarker(8)) {
-    nya.beginTransform(8);
-    box(10);
-    nya.endTransform();
-  }
+//  if (nya.isExistMarker(8)) {
+//    nya.beginTransform(8);
+//    box(10);
+//    nya.endTransform();
+//  }
 }
 
 void mousePressed() {
