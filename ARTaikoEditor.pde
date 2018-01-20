@@ -68,7 +68,7 @@ void setup() {
   nya = new MultiMarker(this, 640, 480, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
   // 8個は空白・8個はどん・8個はかっ
   for (int i = 0; i < 24; i++) {
-    nya.addNyIdMarker(i,20);
+    nya.addNyIdMarker(i, 27);
   }
 } 
 
@@ -122,23 +122,12 @@ void draw() {
       rect((width-REC_W)/2+REC_W/4*x, height-VIDEO_H+(VIDEO_H-REC_H)/2+REC_H/2*y, REC_W/4, REC_H/2);
     }
   }
-}
-
-void mousePressed() {
-  score.checkEditingPart(mouseX, mouseY);
-  score.edit(mouseX, mouseY);
-  // score.updateHead();
-}
-
-void keyPressed() {
-  if (keyCode == UP) score.scrollY(1);
-  if (keyCode == DOWN) score.scrollY(-1);
-  if (keyCode == ENTER) score.turnEditing();
-}
-
-//カメラの映像が更新されるたびに、最新の映像を読み込む
-void captureEvent(Capture camera) {
-  camera.read();
+  
+  if (!cam.available()) {
+     return; 
+  }
+  
+  cam.read();
   nya.detect(cam);
   
   int [] markers = new int [score.EDIT_NOTE_NUM];
@@ -168,10 +157,28 @@ void captureEvent(Capture camera) {
     redValue = redValue / (160 * 156);
     greenValue = greenValue / (160 * 156);
     blueValue = blueValue / (160 * 156);
-    if (blueValue > redValue + 10) {
+    if (blueValue > redValue + 5) {
       markers[i] = 2;
     }
   }
   
   score.edit(markers);
+  
+  if (nya.isExistMarker(8)) {
+    nya.beginTransform(8);
+    box(10);
+    nya.endTransform();
+  }
+}
+
+void mousePressed() {
+  score.checkEditingPart(mouseX, mouseY);
+  score.edit(mouseX, mouseY);
+  // score.updateHead();
+}
+
+void keyPressed() {
+  if (keyCode == UP) score.scrollY(1);
+  if (keyCode == DOWN) score.scrollY(-1);
+  if (keyCode == ENTER) score.turnEditing();
 }
