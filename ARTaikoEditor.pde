@@ -132,10 +132,10 @@ void draw() {
     }
   }
   
-  // これ以降の部分で描画処理を行うとなぜかちらつく。これ以降は描画を書かないようにしてね
-  if (!cam.available()) {
-     return; 
-  }
+  // cam.availableの確認は必要でしょうか？→これを入れるとちらついちゃうんだよね、出来れば入れたくない
+//  if (!cam.available()) {
+//     return; 
+//  }
   cam.read();
   
   int [] markers = new int [score.EDIT_NOTE_NUM];
