@@ -12,7 +12,7 @@ int unitY;
 int scrollY = 0;
 Score score;
 Capture cam; // 動画
-MultiMarker nya;
+MultiMarker [] nyas;
 boolean isAr = false;
 
 // カメラの大きさ（最終的にVIDEO_WとVIDEO_Hに広がる）
@@ -41,6 +41,9 @@ void setup() {
   
   unitX = width / 40;
   unitY = (height - VIDEO_H) / 40;
+  
+  MARKER_W = 156;
+  MARKER_H = 160;
 
   setLayout(null);
   
@@ -69,10 +72,12 @@ void setup() {
   }
   
   // IDマーカーを登録する
-  nya = new MultiMarker(this, 156, 160, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
-  // 8個は空白・8個はどん・8個はかっ
-  for (int i = 0; i < 24; i++) {
-    nya.addNyIdMarker(i, 27);
+  nyas = new MultiMarker [score.EDIT_NOTE_NUM];
+  for (int i = 0; i < nyas.length; i++) {
+    nyas[i] = new MultiMarker(this, 156, 160, "camera_para.dat", NyAR4PsgConfig.CONFIG_PSG);
+    for (int n = 0; n < 3; n++) {
+      nyas[i].addNyIdMarker(n, 27);
+    }
   }
 } 
 
@@ -127,54 +132,28 @@ void draw() {
     }
   }
   
+  // これ以降の部分で描画処理を行うとなぜかちらつく。これ以降は描画を書かないようにしてね
   if (!cam.available()) {
      return; 
   }
-  
   cam.read();
-  PImage img = cam.get(8, 80, 156, 160);
-  nya.detect(img);
-  println(cam);
   
   int [] markers = new int [score.EDIT_NOTE_NUM];
   
   for (int i = 0; i < score.EDIT_NOTE_NUM; i++) {
-    if (nya.isExistMarker(i)) {
-      markers[i] = 0;
-      continue;
-    }
+    PImage detectImg = cam.get(8+156*(i%4), 80+160*(i/4), 156, 160);
+    nyas[i].detect(detectImg);
     
-    markers[i] = 1;
-
-//    // 出来ればパラメータで書きたいねここら辺
-//    PImage recImg = cam.get(8, 80, 624, 320);
-//    
-//    int redValue = 0;
-//    int greenValue = 0;
-//    int blueValue = 0;
-//    
-//    for (int y = 160*(i/4); y < 160*((i/4)+1); y++) {
-//      for (int x = 156*(i%4); x < 156*((i%4)+1); x++) {
-//        redValue += red(recImg.pixels[x + y * 624]);
-//        greenValue += green(recImg.pixels[x + y * 624]);
-//        blueValue += blue(recImg.pixels[x + y * 624]);
-//      } 
-//    }
-//    redValue = redValue / (160 * 156);
-//    greenValue = greenValue / (160 * 156);
-//    blueValue = blueValue / (160 * 156);
-//    if (blueValue > redValue + 5) {
-//      markers[i] = 2;
-//    }
+    // 0~7までのIDマーカーがその場所で見つかったら、空白とする
+    for (int n = 0; n < 3; n++) {
+      if (!nyas[i].isExistMarker(n)) {
+        continue;
+      }
+      markers[i] = n;
+    }
   }
   
   score.edit(markers);
-  
-//  if (nya.isExistMarker(8)) {
-//    nya.beginTransform(8);
-//    box(10);
-//    nya.endTransform();
-//  }
 }
 
 void mousePressed() {
